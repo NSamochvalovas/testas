@@ -21,11 +21,7 @@ router.get('/wines', loggedIn, async (req, res) => {
     `);
     await con.end();
 
-    const { page, limit } = req.query;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-
-    return res.send(data.slice(startIndex, endIndex));
+    return res.send(data);
   } catch (err)
   {
     console.log(err);
