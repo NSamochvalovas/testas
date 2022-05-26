@@ -11,12 +11,15 @@ const { selectWine } = require('../../middleware/validationSchemas/autVerificati
 const router = express.Router();
 
 router.get('/my-wine', loggedIn, async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const userDetails = jwt.verify(token, jwtSecret);
+
   try {
     const con = await mysql.createConnection(mysqlConfig);
     const [data] = await con.execute(`
       SELECT title, region, year, quantity
       FROM wines, colections
-      WHERE  wines.id = wine_id
+      WHERE  wines.id = wine_id AND user_id = ${userDetails.accountId}
     `);
     await con.end();
 
